@@ -11,5 +11,5 @@ Mod of [Old Fogies](https://github.com/tdsbtoes/OldFogies) & [No Hands](https://
 ##TODO
 * Remove bad colour pairs with poor contrast with teddy.
 * Move date out of the way to empty quadrant.
-* Alterante backgrounds for night, am/pm? or sleepy bear, work bear...
+* Alternate backgrounds for night, am/pm? or sleepy bear, necktie bear...
 * Add torn bear mode.
