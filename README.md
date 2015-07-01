@@ -2,7 +2,7 @@ Teddy Bear
 ==========
 Teddy bear shows the hour and points out the minutes with a hand. (Colour, Analogue).
 
-Mod of [Old Fogies](https://github.com/tdsbtoes/OldFogies) & [No Hands](https://github.com/sdneon/NoHands).
+Mod of [Old Forgies](https://github.com/tdsbtoes/OldFogies) & [No Hands](https://github.com/sdneon/NoHands).
 
 ## Changelog
 * v1.0 work-in-progress
@@ -11,5 +11,5 @@ Mod of [Old Fogies](https://github.com/tdsbtoes/OldFogies) & [No Hands](https://
 ##TODO
 * Remove bad colour pairs with poor contrast with teddy.
 * Move date out of the way to empty quadrant.
-* Alterante backgrounds for night, am/pm? or sleepy bear, work bear...
+* Add night background.
 * Add torn bear mode.
