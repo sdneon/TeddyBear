@@ -5,7 +5,9 @@ Teddy bear shows the hour and points out the minutes with a hand. (Colour, Analo
 Mod of [Old Fogies](https://github.com/tdsbtoes/OldFogies) & [No Hands](https://github.com/sdneon/NoHands).
 
 ## Changelog
-* v1.0 work-in-progress
+* v1.1
+  * Bug fixed: painting problem for 10pm+.
+* v1.0
   * Initial release.
  
 ##TODO

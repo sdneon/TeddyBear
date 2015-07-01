@@ -234,7 +234,7 @@ static void update_proc(Layer *layer, GContext *ctx) {
     // Fill in minute color (aka s_colour_b)
     GPathInfo s_min_points =  {
           .num_points = 3,
-          .points = (GPoint []) {{72, -1}, {72, 84}, {minute_hand.x, minute_hand.y}}
+          .points = (GPoint []) {{72, -100}, {72, 84}, {minute_hand.x*3, minute_hand.y*3}}
         };
 
 #ifdef ANIMATE_HOUR
