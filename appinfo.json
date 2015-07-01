@@ -1,0 +1,41 @@
+{
+    "capabilities": [""],
+    "appKeys": {},
+    "resources": {
+        "media": [
+        {
+            "type": "png",
+            "menuIcon": true,
+            "name": "IMAGE_MENU_ICON",
+            "file": "images/logo.png"
+        },
+        {
+          "type": "png",
+          "name": "EXAMPLE_IMAGE",
+          "file": "images/example-image.png"
+        }
+        ,{
+          "type": "png",
+          "name": "TEDDY_FACE",
+          "file": "images/teddy-face.png"
+        }
+        ,{
+          "type": "png",
+          "name": "TEDDY_ARM",
+          "file": "images/teddy-arm.png"
+        }
+    ]},
+    "shortName": "Teddy",
+    "longName": "Teddy Bear (Color, Analogue)",
+    "companyName": "Neon",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "uuid": "ecc8f112-31ee-4ef2-bee1-53c63e8ae13e",
+    "watchapp": {
+        "watchface": true
+    },
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "sdkVersion": "3"
+}
