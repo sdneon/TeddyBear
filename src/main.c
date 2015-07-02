@@ -1,7 +1,28 @@
+/**
+ * ChromaTick watch face variant with a Teddy bear as the star!
+ * Modified by @neon from @tdsbtoes's Old Fogies animation codes:
+ *   https://github.com/tdsbtoes/OldFogies
+ *
+ * Changes:
+ * > Teddy Bear tells the time via hour in face, and points to minutes.
+ * > Removed colours that do not contrast well with teddy.
+ * > Colours in background shows the hour and teddy's hand swings (animates) to the hour (instead of minutes).
+ *   (so that colours won't always split beneath teddy's hand).
+ * > Fixed incomplete coloured sector drawn when time is around 10+pm.
+ * > (dev stuff) Added debug modes (e.g. for testing colours' contrast with teddy).
+ *
+ * TODO:
+ * > Move date to either side so as to never overlap with the hand.
+ * > Fix occasional poor contrast of date text colour.
+ * > Animation: swing hand back from hour to minutes.
+ **/
 #include <pebble.h>
 
 //#define DEBUG_MODE 1
-#define ANIMATE_HOUR
+//Specify this value (in secs to use each colour) to debug colour scheme:
+//#define DEBUG_COLOURS 3
+
+#define ANIMATE_HOUR 1
 
 #define COLORS       true
 #define ANTIALIASING true
@@ -34,11 +55,12 @@ static char s_day_buffer[12];
 
 static GPath *s_min_path;
 
-#define MAX_COLOURS 49
+//#define MAX_COLOURS 49
+#define MAX_COLOURS 46
 static uint8_t face_colours[] = {
     GColorIslamicGreenARGB8,
         GColorInchwormARGB8,
-    GColorOrangeARGB8,
+//    GColorOrangeARGB8,
         GColorYellowARGB8,
     GColorDarkCandyAppleRedARGB8,
         GColorRedARGB8,
@@ -46,17 +68,17 @@ static uint8_t face_colours[] = {
         GColorMagentaARGB8,
     GColorDarkGreenARGB8,
         GColorJaegerGreenARGB8,
-    GColorBlueMoonARGB8,
+    GColorBlueMoonARGB8, //10
         GColorCyanARGB8,
     GColorImperialPurpleARGB8,
         GColorVeryLightBlueARGB8,
-    GColorPurpleARGB8,
-        GColorShockingPinkARGB8,
+    GColorPurpleARGB8, //14
+//        GColorShockingPinkARGB8,
     GColorDarkGrayARGB8,
         GColorLightGrayARGB8,
     GColorWindsorTanARGB8,
         GColorChromeYellowARGB8,
-    GColorArmyGreenARGB8,
+    GColorArmyGreenARGB8, //20
         GColorLimerickARGB8,
     GColorCobaltBlueARGB8,
         GColorCadetBlueARGB8,
@@ -66,17 +88,17 @@ static uint8_t face_colours[] = {
         GColorFashionMagentaARGB8,
     GColorOxfordBlueARGB8,
         GColorLibertyARGB8,
-    GColorDukeBlueARGB8,
-        GColorVividCeruleanARGB8,
-    GColorSunsetOrangeARGB8,
+    GColorDukeBlueARGB8, //30
+        GColorVividCeruleanARGB8, //31
+//    GColorSunsetOrangeARGB8,
         GColorMelonARGB8,
     GColorVividVioletARGB8,
         GColorRichBrilliantLavenderARGB8,
-    GColorLavenderIndigoARGB8,
-        GColorBrilliantRoseARGB8,
+    GColorLavenderIndigoARGB8, //36
+//        GColorBrilliantRoseARGB8,
     GColorTiffanyBlueARGB8,
         GColorElectricBlueARGB8,
-    GColorRoseValeARGB8,
+    GColorRoseValeARGB8, //40
         GColorFollyARGB8,
     GColorMayGreenARGB8,
         GColorMediumAquamarineARGB8,
@@ -85,7 +107,7 @@ static uint8_t face_colours[] = {
     GColorKellyGreenARGB8,
         GColorMintGreenARGB8,
     GColorBulgarianRoseARGB8,
-        GColorPurpureusARGB8
+        GColorPurpureusARGB8 //49
 };
 
 #define MAX_PICS 2
@@ -136,13 +158,26 @@ static void tick_handler(struct tm *tick_time, TimeUnits changed) {
   s_last_time.minutes = tick_time->tm_min;
 #ifdef DEBUG_MODE
   s_last_time.minutes = tick_time->tm_sec;
+#if   DEBUG_COLOURS && ANIMATE_HOUR
+  //fix teddy's hand at 11 o'clock, so we look for conflicts in colour
+  s_last_time.minutes = 55;
+#endif
 #endif
 
+#ifndef DEBUG_COLOURS
     if (s_last_time.minutes == 0 || s_animating) {
-
+#else
+    //static char buffer[] = "00";
+    if (true) {
+#endif
         if (s_animating && s_colour_a == -1) {
             // start color index randomly
+#ifndef DEBUG_COLOURS
             s_colour_a = rand() % MAX_COLOURS;
+#else
+            //rotate colour scheme every DEBUG_COLOURS secs
+            s_colour_a = (((tick_time->tm_min * 60) + tick_time->tm_sec) / DEBUG_COLOURS) % MAX_COLOURS;
+#endif
         }
         else if (!s_animating) {
             s_colour_a++;
@@ -157,7 +192,6 @@ static void tick_handler(struct tm *tick_time, TimeUnits changed) {
         if (s_colour_b > MAX_COLOURS) {
             s_colour_b = 0;
         }
-        //APP_LOG(APP_LOG_LEVEL_DEBUG, "%d, %d", s_colour_a, s_colour_b);
     }
 
   // Redraw
@@ -181,6 +215,7 @@ static void update_proc(Layer *layer, GContext *ctx) {
         // Create a long-lived buffer
         static char buffer[] = "00";
 
+#ifndef DEBUG_COLOURS
         // Write the current hours and minutes into the buffer
         if(clock_is_24h_style() == true) {
             // Use 24 hour format
@@ -198,7 +233,9 @@ static void update_proc(Layer *layer, GContext *ctx) {
             // stupid time, of course we want "12"
             snprintf(buffer, 4, "%s", "12");
         }
-
+#else
+        snprintf(buffer, 4, "%d", s_colour_a);
+#endif //DEBUG_COLOURS
         // Display this time on the TextLayer
         text_layer_set_text(s_hour_digit, buffer);
     }
@@ -234,6 +271,7 @@ static void update_proc(Layer *layer, GContext *ctx) {
     // Fill in minute color (aka s_colour_b)
     GPathInfo s_min_points =  {
           .num_points = 3,
+          //bug fix                 --v (increased from -1 to -100 to make sure it covers top left corner at around 10+pm)
           .points = (GPoint []) {{72, -100}, {72, 84}, {minute_hand.x*3, minute_hand.y*3}}
         };
 
@@ -312,6 +350,7 @@ static void update_proc(Layer *layer, GContext *ctx) {
     graphics_draw_round_rect(ctx, GRect(40, 131, 64, 24), 10);
     strftime(s_day_buffer, sizeof("ddd dd"), "%a %d", tick_time);
     text_layer_set_text(s_day_date, s_day_buffer);
+    //text_layer_set_text_color(s_day_date, (GColor8){.argb=face_colours[s_colour_a]}); //GColorBlack);
 
     s_startup = false;
 }
